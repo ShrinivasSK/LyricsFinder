@@ -24,3 +24,7 @@ query+=name_split[-1]+'+lyrics'
 # print(query)
 process.crawl(LyricsFinderSpider, start_urls=["https://www.google.com/search?q="+query])
 process.start()
+
+# print('lyrics' in 'I am a Lyrics')
+# print('Lyrics' in 'Tera Yaar Hoon Main Lyrics in Hindi, Sonu Ke Titu Ki Sweety Tera ...gaana.com › Hindi Songs › Tera Yaar Hoon Main')
+# print('lyrics' in 'https://www.google.com/url?q=https://gaana.com/lyrics/tera-yaar-hoon-main&sa=U&ved=2ahUKEwj2pLaoo7DwAhUUA3IKHWMYBjEQFjABegQIAxAB&usg=AOvVaw3f0WP4qc3rGSY67ShH_AY-' and 'lyrics' in str('Tera Yaar Hoon Main Lyrics in Hindi, Sonu Ke Titu Ki Sweety Tera ...gaana.com › Hindi Songs › Tera Yaar Hoon Main').lower())
