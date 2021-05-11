@@ -14,6 +14,7 @@ Websites I can  scrape:
 
 7. Lyricsmint - done
 8. ilyricshub - done
+9. lyrics.com
 '''
 
 
@@ -29,35 +30,48 @@ class LyricsFinderSpider(scrapy.Spider):
 
     def parse(self, response):
         xlink = LinkExtractor()
+        data={}
+        for id,link in enumerate(xlink.extract_links(response)):
+            # print("Yo"+str(link),'lyrics' in link.url,'lyrics' in link.text)
+            if 'lyrics' in link.url and 'lyrics' in str(link.text).lower():
+                data[str(id)]={'link': str(link)}
+        yield data
+
+
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('lyricsmint') != -1]
         if(len(link) != 0):
-            print(link[0].url)
+            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseLyricsMint)
+
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('gaana') != -1]
         if(len(link) != 0):
-            print(link[0].url)
+            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseGaana)
+
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('metrolyrics') != -1]
         if(len(link) != 0):
-            print(link[0].url)
+            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseMetrolyics)
+
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('genius') != -1]
         if(len(link) != 0):
-            print(link[0].url)
+            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseGenius)
+
         # link = [link for link in xlink.extract_links(
         #     response) if str(link.url).find('lyricsily') != -1]
         # if(len(link) != 0):
-        #     print(link[0].url)
+            # print(link[0].url)
         #     yield scrapy.Request(link[0].url, callback=self.parseLyricsily)
+
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('ilyricshub') != -1]
         if(len(link) != 0):
-            print(link[0].url)
+            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseILyricsHub)
 
     def parseGenius(self, response):
