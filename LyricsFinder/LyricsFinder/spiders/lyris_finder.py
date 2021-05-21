@@ -15,6 +15,8 @@ Websites I can  scrape:
 7. Lyricsmint - done
 8. ilyricshub - done
 9. lyrics.com
+
+Does not give for songs like khali khali, Aise kyu
 '''
 
 
