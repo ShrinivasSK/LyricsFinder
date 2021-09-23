@@ -1,1 +1,1 @@
-python3 /home/shrinivas/KGP/WebScraping/LyricsFinder/main.py -s "$1" -a "$2"
+python3 <path/to/repo>/LyricsFinder/main.py -s "$1" -a "$2"
