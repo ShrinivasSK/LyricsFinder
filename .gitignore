@@ -2,3 +2,5 @@
 **/__init___.py
 **/__init___.pyc
 **/*.pyc
+.idea/**
+.vscode/**

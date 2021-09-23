@@ -40,7 +40,7 @@ def spider_results():
     name_split = args['song_name'].split()
     for name in name_split[:-1]:
         query += name+'+'
-    query += name_split[-1]+'+lyrics'
+    query += name_split[-1]+'+lyrics'+'+-site:youtube.com'
     # print(query)
     process.crawl(LyricsFinderSpider, start_urls=[
         "https://www.google.com/search?q="+query])
@@ -59,19 +59,41 @@ def cvtToJson(results):
         data[res['source']] = res['lyrics']
     return data
 
-
-def printResultsJson(res):
+def printResultsJson(res,whichPrint):
     print("{} results recieved".format(res['num']))
     for src in res['sources']:
         print("Received From: {}".format(src))
-        print("Lyrics: {}\n".format(res[src]))
+        print("Lyrics: ")
+        # print(res[src])
+        whichPrint.get(src,printLyircs)(res[src])
+        print()
 
+
+def printLyircs(lyrics):
+    for line in lyrics:
+        print(line,end="")
+    print()
+
+def printLyircs1(lyrics):
+    for line in lyrics:
+        print(line)
+    print()
+
+whichPrint={
+    'I Lyrics Hub': printLyircs1,
+    'Gaana': printLyircs,
+    'Genius': printLyircs,
+    'Lyrics Mint': printLyircs,
+    'Metrolyrics': printLyircs,
+    'Lyricsily': printLyircs,
+    'A Z Lyrics': printLyircs,
+}
 
 if __name__ == '__main__':
     results = spider_results()
     # print(results)
     y = cvtToJson(results)
-    printResultsJson(y)
+    printResultsJson(y,whichPrint)
 
 # print('lyrics' in 'I am a Lyrics')
 # print('Lyrics' in 'Tera Yaar Hoon Main Lyrics in Hindi, Sonu Ke Titu Ki Sweety Tera ...gaana.com › Hindi Songs › Tera Yaar Hoon Main')
