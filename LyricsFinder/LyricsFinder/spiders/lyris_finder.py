@@ -25,18 +25,10 @@ Does not give for songs like khali khali, Aise kyu
 class LyricsFinderSpider(scrapy.Spider):
     name = 'lyris_finder'
 
-    # def parse(self, response):
-    #     xlink = LinkExtractor()
-    #     for link in xlink.extract_links(response):
-    #         # print("Yo"+str(link),'lyrics' in link.url,'lyrics' in link.text)
-    #         if 'lyrics' in link.url and 'lyrics' in str(link.text).lower():
-    #             yield {'link': str(link)}
-
     def parse(self, response):
         xlink = LinkExtractor()
         data={}
         for id,link in enumerate(xlink.extract_links(response)):
-            # print("Yo"+str(link),'lyrics' in link.url,'lyrics' in link.text)
             if 'lyrics' in link.url and 'lyrics' in str(link.text).lower():
                 data[str(id)]={'link': str(link)}
         yield data
@@ -45,71 +37,74 @@ class LyricsFinderSpider(scrapy.Spider):
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('lyricsmint') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseLyricsMint)
 
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('gaana') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseGaana)
 
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('metrolyrics') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseMetrolyics)
 
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('genius') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseGenius)
-
-        # link = [link for link in xlink.extract_links(
-        #     response) if str(link.url).find('lyricsily') != -1]
-        # if(len(link) != 0):
-            # print(link[0].url)
-        #     yield scrapy.Request(link[0].url, callback=self.parseLyricsily)
 
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('ilyricshub') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseILyricsHub)
         
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('karoke') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseAZLyrics)
         
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('karaoke-lyrics') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseKarokeLyrics)
         
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('crownlyric') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseCrownLyric)
-
-        link = [link for link in xlink.extract_links(
-            response) if str(link.url).find('songlyrics') != -1]
-        if(len(link) != 0):
-            # print(link[0].url)
-            yield scrapy.Request(link[0].url, callback=self.parseSongLyrics)
 
         link = [link for link in xlink.extract_links(
             response) if str(link.url).find('smule') != -1]
         if(len(link) != 0):
-            # print(link[0].url)
             yield scrapy.Request(link[0].url, callback=self.parseSmule)
 
+        link = [link for link in xlink.extract_links(
+            response) if str(link.url).find('mysonglyrics') != -1]
+        if(len(link) != 0):
+            yield scrapy.Request(link[0].url, callback=self.parseMySongLyrics)
+
+        link = [link for link in xlink.extract_links(
+            response) if str(link.url).find('lyricsgoal') != -1]
+        if(len(link) != 0):
+            yield scrapy.Request(link[0].url, callback=self.parseLyricsGoal)
+
+        link = [link for link in xlink.extract_links(
+            response) if str(link.url).find('lyricsraag') != -1]
+        if(len(link) != 0):
+            yield scrapy.Request(link[0].url, callback=self.parseLyricsRaag)
+
+        link = [link for link in xlink.extract_links(
+            response) if str(link.url).find('wowlyrics') != -1]
+        if(len(link) != 0):
+            yield scrapy.Request(link[0].url, callback=self.parseWowLyrics)
+
+        link = [link for link in xlink.extract_links(
+            response) if str(link.url).find('bharatlyrics') != -1]
+        if(len(link) != 0):
+            yield scrapy.Request(link[0].url, callback=self.parseBharatLyrics)
+
     def parseGenius(self, response):
-        # open_in_browser(response)
         lyrics = response.css('.lyrics p').css('::text').extract()
         yield {'lyrics': lyrics, 'source': 'Genius'}
 
@@ -145,10 +140,26 @@ class LyricsFinderSpider(scrapy.Spider):
         lyrics = response.css('.has-text-align-cente').css('::text').extract()
         yield {'lyrics': lyrics, 'source': 'Crown Lyrics'}
 
-    def parseSongLyrics(self,response):
-        lyrics = response.css('.pg_close-ad-btn-content , #songLyricsDiv').css('::text').extract()
-        yield {'lyrics': lyrics, 'source': 'Song Lyrics'}
-
     def parseSmule(self,response):
         lyrics = response.css('.p').css('::text').extract()
         yield {'lyrics': lyrics, 'source': 'Smule'}
+
+    def parseMySongLyrics(self,response):
+        lyrics = response.css('.lyricsbull-right-column span').css('::text').extract()
+        yield {'lyrics': lyrics, 'source': 'My Song Lyrics'}
+
+    def parseLyricsGoal(self,response):
+        lyrics = response.css('#content p').css('::text').extract()
+        yield {'lyrics': lyrics, 'source': 'Lyrics Goal'}
+
+    def parseLyricsRaag(self,response):
+        lyrics = response.css('.wps-active').css('::text').extract()
+        yield {'lyrics': lyrics, 'source': 'Lyrics Raag'}
+
+    def parseWowLyrics(self,response):
+        lyrics = response.css('.entry-content p').css('::text').extract()
+        yield {'lyrics': lyrics, 'source': 'Wow Lyrics'}
+
+    def parseBharatLyrics(self,response):
+        lyrics = response.css('.active p').css('::text').extract()
+        yield {'lyrics': lyrics, 'source': 'Bharat Lyrics'}

@@ -13,6 +13,8 @@ parser = argparse.ArgumentParser(
     description='Get the lyrics for your favourite songs')
 parser.add_argument('-s', '--song_name', required=True,
                     help='Enter name of song')
+parser.add_argument('-a', '--singer', required=False,
+                    help='Enter singer of song')
 
 args = vars(parser.parse_args())
 
@@ -40,7 +42,14 @@ def spider_results():
     name_split = args['song_name'].split()
     for name in name_split[:-1]:
         query += name+'+'
-    query += name_split[-1]+'+lyrics'+'+-site:youtube.com'
+    if(args['singer']):
+        query+=name_split[-1]+'+by'+'+'
+        singer_split =args['singer'].split()
+        for name in singer_split[:-1]:
+            query += name+'+'
+        query += singer_split[-1]+'+lyrics'+'+-site:youtube.com'
+    else:
+        query += name_split[-1]+'+lyrics'+'+-site:youtube.com'
     # print(query)
     process.crawl(LyricsFinderSpider, start_urls=[
         "https://www.google.com/search?q="+query])
@@ -53,10 +62,10 @@ def cvtToJson(results):
     data['num'] = 0
     data['sources'] = []
     for res in results[1:]:
-        # if(len(res['lyrics']) != 0):
-        data['num'] += 1
-        data['sources'].append(res['source'])
-        data[res['source']] = res['lyrics']
+        if(len(res['lyrics']) != 0):
+            data['num'] += 1
+            data['sources'].append(res['source'])
+            data[res['source']] = res['lyrics']
     return data
 
 def printResultsJson(res,whichPrint):
@@ -87,11 +96,13 @@ whichPrint={
     'Metrolyrics': printLyircs,
     'Lyricsily': printLyircs,
     'A Z Lyrics': printLyircs,
+    'My Song Lyrics': printLyircs1,
+    'Wow Lyrics': printLyircs1,
+    'Bharat Lyrics': printLyircs1,
 }
 
 if __name__ == '__main__':
     results = spider_results()
-    # print(results)
     y = cvtToJson(results)
     printResultsJson(y,whichPrint)
 
